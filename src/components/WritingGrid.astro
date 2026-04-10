@@ -1,0 +1,107 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'writing'>[];
+}
+
+const { posts } = Astro.props;
+
+// Format pubDate as just the year — quiet, no implied schedule.
+const yearOf = (d: Date) => d.getFullYear().toString();
+---
+
+<div class="writing-grid">
+  {posts.map((post) => {
+    const slug = post.id.replace(/\.mdx?$/, '');
+    return (
+      <a class="card" href={`/writing/${slug}/`}>
+        <div class="card-inner">
+          <div class="meta-row">
+            <span class="year">{yearOf(post.data.pubDate)}</span>
+            {post.data.tags && post.data.tags.length > 0 && (
+              <span class="tags">{post.data.tags[0]}</span>
+            )}
+          </div>
+          <h2 class="title">{post.data.title}</h2>
+          {post.data.description && (
+            <p class="desc">{post.data.description}</p>
+          )}
+          <div class="read">Read →</div>
+        </div>
+      </a>
+    );
+  })}
+</div>
+
+<style>
+  .writing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+    gap: 1.5rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .card {
+    display: block;
+    border: 1px solid var(--rule);
+    color: var(--ink);
+    padding: 0;
+    border-bottom: 1px solid var(--rule);
+    transition: border-color .15s, background .15s;
+  }
+  .card:hover {
+    border-color: var(--accent);
+  }
+  .card:hover .title { color: var(--accent); }
+  .card:hover .read  { color: var(--accent); }
+
+  .card-inner {
+    padding: 1.75rem 1.85rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: .85rem;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    font-feature-settings: "tnum";
+  }
+  .meta-row .tags { color: var(--accent); }
+
+  .title {
+    font-size: 1.65rem;
+    font-variation-settings: "opsz" 48, "SOFT" 30, "WONK" 0;
+    font-weight: 500;
+    letter-spacing: -.015em;
+    line-height: 1.15;
+    color: var(--ink);
+    transition: color .15s;
+    margin: 0;
+  }
+  .desc {
+    color: var(--muted);
+    font-size: .95rem;
+    line-height: 1.55;
+    margin: 0;
+    flex-grow: 1;
+  }
+  .read {
+    margin-top: 1rem;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--muted);
+    font-weight: 500;
+    transition: color .15s;
+  }
+</style>

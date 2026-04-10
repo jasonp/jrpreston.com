@@ -24,7 +24,8 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
 
     <nav class="home-nav">
       <a href="/daily/"><span class="label">Daily</span><span class="meta">An AI experiment</span></a>
-      <a href="/writing/"><span class="label">Writing</span><span class="meta">Essays &amp; archive</span></a>
+      <a href="/writing/"><span class="label">Writing</span><span class="meta">Essays &amp; pieces</span></a>
+      <a href="/archive/"><span class="label">Archive</span><span class="meta">Older work</span></a>
       <a href="/about/"><span class="label">About</span><span class="meta">A curious life</span></a>
       <a href="https://www.flickr.com/photos/jasonp107/"><span class="label">Photography</span><span class="meta">On Flickr</span></a>
       <a href="/rss.xml"><span class="label">Feed</span><span class="meta">RSS / Atom</span></a>
@@ -54,9 +55,12 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
   }
   .name {
     font-size: clamp(3rem, 7vw, 5rem);
-    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+    /* Use the text-grade Fraunces axes (lower opsz, SOFT 0) on the home name
+       to keep the J neutral. Other headlines still use the display-grade
+       opsz 144, SOFT 30 settings. */
+    font-variation-settings: "opsz" 60, "SOFT" 0, "WONK" 0;
     font-weight: 400;
-    letter-spacing: -.035em;
+    letter-spacing: -.025em;
     line-height: .95;
     margin-top: 4rem;
   }

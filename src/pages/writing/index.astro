@@ -1,35 +1,25 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostList from '../../components/PostList.astro';
+import WritingGrid from '../../components/WritingGrid.astro';
 
-const all = (await getCollection('writing', ({ data }) => !data.draft)).sort(
+const recent = (await getCollection('writing', ({ data }) => !data.draft && !data.archive)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
-
-const recent = all.filter((p) => !p.data.archive);
-const archive = all.filter((p) => p.data.archive);
 ---
 
 <BaseLayout
   title="Writing — Jason Preston"
-  description="Longer essays. Some new, some revived from the WordPress years."
+  description="Essays and longer pieces. Tinkering, not a schedule."
 >
   <section class="section">
     <header class="section-header">
-      <div class="eyebrow">Essays &amp; archive</div>
+      <div class="eyebrow">Essays &amp; longer pieces</div>
       <h1>Writing</h1>
-      <p class="dek">Longer pieces. Some new, some revived from the WordPress years (2005&ndash;2011). <a href="/writing/rss.xml">Subscribe via RSS</a>.</p>
+      <p class="dek">Whatever's worth a longer turn. No schedule. <a href="/writing/rss.xml">RSS</a>. For older posts from the WordPress years, see the <a href="/archive/">archive</a>.</p>
     </header>
 
-    <PostList posts={recent} basePath="/writing" />
-
-    {archive.length > 0 && (
-      <div class="archive">
-        <h2 class="archive-label">Archive</h2>
-        <PostList posts={archive} basePath="/writing" showExcerpt={false} />
-      </div>
-    )}
+    <WritingGrid posts={recent} />
   </section>
 </BaseLayout>
 
@@ -67,24 +57,6 @@ const archive = all.filter((p) => p.data.archive);
   }
   .dek a { color: var(--muted); border-bottom-color: var(--rule); }
   .dek a:hover { color: var(--accent); border-bottom-color: var(--accent); }
-
-  .archive {
-    margin-top: 5rem;
-    padding-top: 3rem;
-    border-top: 1px solid var(--rule);
-    max-width: 720px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .archive-label {
-    font-size: .72rem;
-    text-transform: uppercase;
-    letter-spacing: .16em;
-    color: var(--muted);
-    margin-bottom: 1.5rem;
-    font-weight: 500;
-    text-align: center;
-  }
 
   @media (max-width: 600px) {
     .section { padding: 2rem 1.25rem 3rem; }
