@@ -1,0 +1,92 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+
+const all = (await getCollection('writing', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const recent = all.filter((p) => !p.data.archive);
+const archive = all.filter((p) => p.data.archive);
+---
+
+<BaseLayout
+  title="Writing — Jason Preston"
+  description="Longer essays. Some new, some revived from the WordPress years."
+>
+  <section class="section">
+    <header class="section-header">
+      <div class="eyebrow">Essays &amp; archive</div>
+      <h1>Writing</h1>
+      <p class="dek">Longer pieces. Some new, some revived from the WordPress years (2005&ndash;2011). <a href="/writing/rss.xml">Subscribe via RSS</a>.</p>
+    </header>
+
+    <PostList posts={recent} basePath="/writing" />
+
+    {archive.length > 0 && (
+      <div class="archive">
+        <h2 class="archive-label">Archive</h2>
+        <PostList posts={archive} basePath="/writing" showExcerpt={false} />
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .section {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 4rem 2rem 4rem;
+  }
+  .section-header { text-align: center; margin-bottom: 4rem; }
+  .eyebrow {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  h1 {
+    font-size: clamp(2.6rem, 6vw, 4rem);
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+    font-weight: 400;
+    letter-spacing: -.03em;
+    line-height: 1;
+    margin: 0 0 1rem;
+  }
+  .dek {
+    color: var(--muted);
+    font-size: 1.05rem;
+    font-variation-settings: "opsz" 24, "SOFT" 60, "WONK" 0;
+    font-style: italic;
+    max-width: 56ch;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+  .dek a { color: var(--muted); border-bottom-color: var(--rule); }
+  .dek a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .archive {
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--rule);
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .archive-label {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .section { padding: 2rem 1.25rem 3rem; }
+  }
+</style>

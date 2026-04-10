@@ -1,0 +1,216 @@
+/* ==========================================================================
+   jrpreston.com — global styles
+   Single source of truth: DESIGN.md at the project root
+   ========================================================================== */
+
+:root {
+  /* Dark is the primary mode */
+  --paper:        #14130E;
+  --surface:      #1F1D17;
+  --ink:          #EDE8DC;
+  --muted:        #958E7E;
+  --faint:        #45423B;
+  --accent:       #D4683E;
+  --accent-soft:  #3A2218;
+  --rule:         #2A2820;
+
+  /* Layout */
+  --maxw: 1120px;
+  --prose: 640px;
+
+  /* Spacing scale (8px base) */
+  --s-2xs: 2px;
+  --s-xs:  4px;
+  --s-sm:  8px;
+  --s-md:  16px;
+  --s-lg:  24px;
+  --s-xl:  32px;
+  --s-2xl: 48px;
+  --s-3xl: 64px;
+  --s-4xl: 96px;
+  --s-5xl: 128px;
+
+  /* Type */
+  --font-serif: "Fraunces", ui-serif, Georgia, serif;
+  --font-mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+[data-theme="light"] {
+  --paper:        #FAF9F5;
+  --surface:      #F1EDE2;
+  --ink:          #1A1918;
+  --muted:        #6B6860;
+  --faint:        #B8B2A3;
+  --accent:       #A64B2A;
+  --accent-soft:  #F3E0D5;
+  --rule:         #E5DFD0;
+}
+
+/* ---------- reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+img, svg, video { display: block; max-width: 100%; height: auto; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+/* ---------- base ---------- */
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 14, "SOFT" 30, "WONK" 0;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.55;
+  font-feature-settings: "ss01", "onum";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background .3s ease, color .3s ease;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(212, 104, 62, .4);
+  transition: border-color .15s, color .15s;
+}
+a:hover { border-bottom-color: var(--accent); }
+[data-theme="light"] a { border-bottom-color: rgba(166, 75, 42, .35); }
+
+p { margin-bottom: 1.35rem; }
+
+/* ---------- type roles ----------
+   See DESIGN.md "Type scale" for the full table. */
+
+.t-hero {
+  font-size: clamp(3rem, 7vw, 5rem);
+  font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: .95;
+}
+.t-h1 {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+  font-weight: 400;
+  letter-spacing: -.025em;
+  line-height: 1.05;
+}
+.t-h2 {
+  font-size: 1.5rem;
+  font-variation-settings: "opsz" 48, "SOFT" 30, "WONK" 0;
+  font-weight: 500;
+  letter-spacing: -.01em;
+  line-height: 1.2;
+}
+.t-dek {
+  font-size: 1.15rem;
+  font-variation-settings: "opsz" 24, "SOFT" 60, "WONK" 0;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.t-eyebrow {
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  color: var(--accent);
+  font-weight: 500;
+}
+.t-micro {
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--muted);
+  font-weight: 500;
+}
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: .8rem;
+  color: var(--muted);
+  font-feature-settings: "tnum";
+}
+
+/* ---------- containers ---------- */
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--s-xl); }
+.prose-wrap { max-width: var(--prose); margin: 0 auto; padding: 0 var(--s-md); }
+
+/* ---------- prose defaults (for .prose blocks) ---------- */
+.prose p {
+  font-size: 1.08rem;
+  line-height: 1.65;
+  font-variation-settings: "opsz" 14, "SOFT" 30, "WONK" 0;
+}
+.prose h2 {
+  font-size: 1.5rem;
+  font-variation-settings: "opsz" 48, "SOFT" 30, "WONK" 0;
+  font-weight: 500;
+  letter-spacing: -.01em;
+  margin: 3rem 0 1rem;
+}
+.prose h3 {
+  font-size: 1.2rem;
+  font-variation-settings: "opsz" 32, "SOFT" 30, "WONK" 0;
+  font-weight: 500;
+  margin: 2rem 0 .8rem;
+}
+.prose blockquote {
+  border-left: 2px solid var(--accent);
+  padding: .3rem 0 .3rem 1.5rem;
+  margin: 2rem 0;
+  font-style: italic;
+  color: var(--muted);
+  font-size: 1.1rem;
+  font-variation-settings: "opsz" 24, "SOFT" 60, "WONK" 0;
+}
+.prose .dropcap::first-letter {
+  font-size: 4.6rem;
+  float: left;
+  line-height: .85;
+  padding: .35rem .65rem 0 0;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
+  color: var(--accent);
+  font-weight: 500;
+}
+.prose .ornament {
+  text-align: center;
+  color: var(--faint);
+  margin: 2.5rem 0;
+  letter-spacing: 1rem;
+  font-size: 1.2rem;
+}
+.prose code {
+  font-family: var(--font-mono);
+  font-size: .88em;
+  background: var(--surface);
+  padding: .12em .35em;
+  border-radius: 3px;
+}
+.prose pre {
+  font-family: var(--font-mono);
+  background: var(--surface);
+  padding: 1rem 1.25rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: .9rem;
+  margin: 1.5rem 0;
+}
+.prose pre code { background: none; padding: 0; }
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 2.5rem 0;
+}
+.prose ul, .prose ol { padding-left: 1.5rem; margin-bottom: 1.35rem; }
+.prose li { margin-bottom: .35rem; line-height: 1.65; }
+
+/* ---------- accessibility ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::selection { background: var(--accent-soft); color: var(--ink); }

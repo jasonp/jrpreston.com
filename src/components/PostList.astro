@@ -1,0 +1,84 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: (CollectionEntry<'daily'> | CollectionEntry<'writing'>)[];
+  basePath: '/daily' | '/writing';
+  showExcerpt?: boolean;
+}
+
+const { posts, basePath, showExcerpt = true } = Astro.props;
+
+const dateFmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<ol class="post-list">
+  {posts.map((post) => {
+    const slug = post.id.replace(/\.mdx?$/, '');
+    return (
+      <li class="post-item">
+        <a class="title-link" href={`${basePath}/${slug}/`}>
+          <h2 class="post-title">{post.data.title}</h2>
+        </a>
+        <div class="post-meta">
+          <time datetime={post.data.pubDate.toISOString()}>{dateFmt(post.data.pubDate)}</time>
+        </div>
+        {showExcerpt && post.data.description && (
+          <p class="post-excerpt">{post.data.description}</p>
+        )}
+      </li>
+    );
+  })}
+</ol>
+
+<style>
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .post-item {
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .post-item:first-child { padding-top: 0; }
+  .post-item:last-child { border-bottom: none; }
+
+  .title-link {
+    border: none;
+    color: var(--ink);
+    display: block;
+  }
+  .title-link:hover .post-title { color: var(--accent); }
+
+  .post-title {
+    font-size: 1.55rem;
+    font-variation-settings: "opsz" 48, "SOFT" 30, "WONK" 0;
+    font-weight: 500;
+    letter-spacing: -.015em;
+    line-height: 1.2;
+    color: var(--ink);
+    transition: color .15s;
+    margin: 0;
+  }
+  .post-meta {
+    margin-top: .5rem;
+    font-family: var(--font-mono);
+    font-size: .75rem;
+    color: var(--muted);
+    font-feature-settings: "tnum";
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .post-excerpt {
+    margin-top: .9rem;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+</style>

@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+
+const posts = (await getCollection('daily', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout
+  title="Daily — Jason Preston"
+  description="A daily AI-blogging experiment. One post a day, written with help from AI, about whatever I'm thinking about."
+>
+  <section class="section">
+    <header class="section-header">
+      <div class="eyebrow">An AI experiment</div>
+      <h1>Daily</h1>
+      <p class="dek">One post a day, written with help from AI, about whatever I'm thinking about. <a href="/daily/rss.xml">Subscribe via RSS</a>.</p>
+    </header>
+
+    <PostList posts={posts} basePath="/daily" />
+  </section>
+</BaseLayout>
+
+<style>
+  .section {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 4rem 2rem 4rem;
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+  .eyebrow {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  h1 {
+    font-size: clamp(2.6rem, 6vw, 4rem);
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+    font-weight: 400;
+    letter-spacing: -.03em;
+    line-height: 1;
+    margin: 0 0 1rem;
+  }
+  .dek {
+    color: var(--muted);
+    font-size: 1.05rem;
+    font-variation-settings: "opsz" 24, "SOFT" 60, "WONK" 0;
+    font-style: italic;
+    max-width: 50ch;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+  .dek a { color: var(--muted); border-bottom-color: var(--rule); }
+  .dek a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .section { padding: 2rem 1.25rem 3rem; }
+  }
+</style>

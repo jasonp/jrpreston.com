@@ -1,0 +1,235 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  title: string;
+  description?: string;
+  pubDate: Date;
+  section: 'daily' | 'writing';
+  headings?: Heading[];
+  readMinutes?: number;
+}
+
+const { title, description, pubDate, section, headings = [], readMinutes } = Astro.props;
+
+const tocItems = headings.filter((h) => h.depth === 2);
+const sectionLabel = section === 'daily' ? 'Daily' : 'Writing';
+
+const dateLong = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={`${title} — Jason Preston`} description={description}>
+  <article class="essay">
+    <header class="essay-meta">
+      <div class="eyebrow">{sectionLabel}</div>
+      <h1>{title}</h1>
+      <div class="byline">
+        Jason Preston ·
+        {readMinutes && (<><span class="accent">{readMinutes} min read</span> · </>)}
+        <time datetime={pubDate.toISOString()}>{dateLong}</time>
+      </div>
+    </header>
+
+    <div class="essay-grid">
+      {tocItems.length > 0 && (
+        <aside class="toc" aria-label="Contents">
+          <h4>Contents</h4>
+          <ol>
+            {tocItems.map((h) => (
+              <li><a href={`#${h.slug}`}>{h.text}</a></li>
+            ))}
+          </ol>
+        </aside>
+      )}
+
+      <div class="essay-prose prose">
+        <slot />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .essay {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 4rem 2rem 5rem;
+  }
+  .essay-meta { text-align: center; margin-bottom: 3.5rem; }
+  .eyebrow {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  .essay-meta h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+    font-weight: 400;
+    letter-spacing: -.025em;
+    line-height: 1.05;
+    max-width: 22ch;
+    margin: 0 auto 1rem;
+  }
+  .byline {
+    color: var(--muted);
+    font-size: .85rem;
+    font-feature-settings: "tnum";
+  }
+  .byline .accent { color: var(--accent); }
+
+  /* Three-column grid: TOC | prose | margin-notes
+     Note: GFM markdown footnotes still render at the bottom of prose for M2.
+     Margin-note positioning is a M3 polish item. */
+  .essay-grid {
+    display: grid;
+    grid-template-columns:
+      [full-start] minmax(1rem, 1fr)
+      [toc-start]  minmax(150px, 180px)
+      [toc-end prose-start] minmax(0, var(--prose))
+      [prose-end note-start] minmax(150px, 220px)
+      [note-end]   minmax(1rem, 1fr)
+      [full-end];
+    gap: 2rem;
+  }
+  .essay-grid > * { grid-column: prose; }
+  .essay-grid .toc { grid-column: toc; }
+
+  .toc {
+    position: sticky;
+    top: 2rem;
+    align-self: start;
+    font-size: .8rem;
+    line-height: 1.5;
+    padding-right: 1rem;
+    border-right: 1px solid var(--rule);
+  }
+  .toc h4 {
+    font-size: .65rem;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: var(--muted);
+    margin-bottom: .9rem;
+    font-weight: 500;
+  }
+  .toc ol { list-style: none; counter-reset: toc; padding: 0; margin: 0; }
+  .toc ol li {
+    margin-bottom: .5rem;
+    counter-increment: toc;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  .toc ol li::before {
+    content: counter(toc, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: var(--font-mono);
+    font-size: .65rem;
+    color: var(--faint);
+    font-feature-settings: "tnum";
+  }
+  .toc a {
+    color: var(--muted);
+    border: none;
+    display: block;
+    padding: .05rem 0;
+  }
+  .toc a:hover { color: var(--accent); }
+
+  .essay-prose :global(p) {
+    margin-bottom: 1.35rem;
+    font-size: 1.08rem;
+    line-height: 1.65;
+    font-variation-settings: "opsz" 14, "SOFT" 30, "WONK" 0;
+  }
+  .essay-prose :global(> p:first-child::first-letter),
+  .essay-prose :global(> p:first-of-type::first-letter) {
+    /* Drop cap on the opening paragraph only.
+       Direct child selector prevents matching <p> inside <blockquote>. */
+    font-size: 4.6rem;
+    float: left;
+    line-height: .85;
+    padding: .35rem .65rem 0 0;
+    font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .essay-prose :global(h2) {
+    font-size: 1.5rem;
+    font-variation-settings: "opsz" 48, "SOFT" 30, "WONK" 0;
+    font-weight: 500;
+    letter-spacing: -.01em;
+    margin: 3rem 0 1rem;
+  }
+  .essay-prose :global(h3) {
+    font-size: 1.2rem;
+    font-variation-settings: "opsz" 32, "SOFT" 30, "WONK" 0;
+    font-weight: 500;
+    margin: 2rem 0 .8rem;
+  }
+  .essay-prose :global(blockquote) {
+    border-left: 2px solid var(--accent);
+    padding: .3rem 0 .3rem 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 1.1rem;
+    font-variation-settings: "opsz" 24, "SOFT" 60, "WONK" 0;
+  }
+  .essay-prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.5rem 0;
+  }
+  .essay-prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: .88em;
+    background: var(--surface);
+    padding: .12em .35em;
+    border-radius: 3px;
+  }
+  .essay-prose :global(pre) {
+    font-family: var(--font-mono);
+    background: var(--surface);
+    padding: 1rem 1.25rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: .9rem;
+    margin: 1.5rem 0;
+  }
+  .essay-prose :global(pre code) { background: none; padding: 0; }
+  .essay-prose :global(ul),
+  .essay-prose :global(ol) { padding-left: 1.5rem; margin-bottom: 1.35rem; }
+  .essay-prose :global(li) { margin-bottom: .35rem; line-height: 1.65; }
+
+  /* Mobile: collapse to single column */
+  @media (max-width: 900px) {
+    .essay { padding: 3rem 1.25rem 4rem; }
+    .essay-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+    .essay-grid > *,
+    .essay-grid .toc { grid-column: 1; }
+    .toc {
+      position: static;
+      border-right: none;
+      border-bottom: 1px solid var(--rule);
+      padding: 0 0 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+</style>
