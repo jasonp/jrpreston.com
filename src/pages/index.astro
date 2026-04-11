@@ -18,14 +18,11 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
   <section class="home">
     <h1 class="name anim a1">Jason Preston</h1>
     <p class="tagline anim a2">Writer, VC, curious person. Co-founded <a href="https://dentthefuture.com">Dent</a> in 2012. Now starting up <a href="https://tkmt.vc">TK Ventures</a>. Based in Seattle.</p>
-  </section>
 
-  <figure class="photo anim a3">
-    <img src="/images/crepuscular-longs.jpg" alt="Crepuscular rays over Longs Peak, Colorado" width="2048" height="1366" loading="eager" />
-    <figcaption>Crepuscular rays · Longs Peak · Rocky Mountain N.P.</figcaption>
-  </figure>
-
-  <section class="home">
+    <figure class="photo anim a3">
+      <img src="/images/crepuscular-longs.jpg" alt="Crepuscular rays over Longs Peak, Colorado" width="2048" height="1366" loading="eager" />
+      <figcaption>Crepuscular rays · Longs Peak · Rocky Mountain N.P.</figcaption>
+    </figure>
     <nav class="home-nav anim a4">
       <a href="/daily/" class="nav-link">
         <span class="nav-label">Daily</span>
@@ -139,21 +136,12 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
      No hard border — a faint ambient shadow lifts it off
      the dark paper. */
   .photo {
-    max-width: 960px;
-    margin: 4rem auto 0;
-    padding: 0 2.5rem;
+    margin: 3.5rem 0 0;
   }
   .photo img {
     width: 100%;
     display: block;
-    box-shadow:
-      0 0 0 1px var(--rule),
-      0 8px 30px rgba(0,0,0,.35);
-  }
-  [data-theme="light"] .photo img {
-    box-shadow:
-      0 0 0 1px var(--rule),
-      0 8px 30px rgba(0,0,0,.08);
+    border: 1px solid var(--rule);
   }
   .photo figcaption {
     font-size: .72rem;
@@ -162,7 +150,6 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
     margin-top: .85rem;
     font-feature-settings: "tnum";
     letter-spacing: .02em;
-    padding-right: .25rem;
   }
 
   /* ── nav ────────────────────────────────────────────── */
@@ -172,7 +159,7 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
     border-top: 1px solid var(--rule);
     display: flex;
     justify-content: center;
-    gap: 3rem;
+    gap: 2rem;
     flex-wrap: wrap;
   }
 
