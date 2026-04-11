@@ -25,8 +25,8 @@
   }
   .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
   .label-light { display: none; }
-  [data-theme="light"] .label-dark { display: none; }
-  [data-theme="light"] .label-light { display: inline; }
+  :global([data-theme="light"]) .label-dark { display: none; }
+  :global([data-theme="light"]) .label-light { display: inline; }
 </style>
 
 <script is:inline>
