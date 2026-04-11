@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 // Pull the most recent daily post for the optional "Latest" line.
 // If there's nothing recent (or the daily collection is empty),
@@ -13,9 +14,12 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
 ---
 
 <BaseLayout title="Jason Preston" noChrome>
+  <div class="home-toggle">
+    <ThemeToggle />
+  </div>
   <section class="home">
     <h1 class="name">Jason Preston</h1>
-    <p class="tagline">Writer, investor, curious person. Co-founded <a href="https://dentthefuture.com">Dent</a> in 2012. Partner at <a href="https://alsop-louie.com">Alsop Louie</a> since 2019. Seattle.</p>
+    <p class="tagline">Writer, VC, curious person. Co-founded <a href="https://dentthefuture.com">Dent</a> in 2012. Starting up <a href="https://tkmt.vc">TK Ventures</a>. Based in Seattle.</p>
 
     <figure class="photo-frame">
       <img src="/images/crepuscular-longs.jpg" alt="Crepuscular rays over Longs Peak, Colorado" width="2048" height="1366" />
@@ -25,7 +29,7 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
     <nav class="home-nav">
       <a href="/daily/"><span class="label">Daily</span><span class="meta">An AI experiment</span></a>
       <a href="/writing/"><span class="label">Writing</span><span class="meta">Essays &amp; pieces</span></a>
-      <a href="/archive/"><span class="label">Archive</span><span class="meta">Older work</span></a>
+      <a href="/projects/"><span class="label">Projects</span><span class="meta">Older work</span></a>
       <a href="/about/"><span class="label">About</span><span class="meta">A curious life</span></a>
       <a href="https://www.flickr.com/photos/jasonp107/"><span class="label">Photography</span><span class="meta">On Flickr</span></a>
       <a href="/rss.xml"><span class="label">Feed</span><span class="meta">RSS / Atom</span></a>
@@ -41,12 +45,18 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
     )}
 
     <div class="home-bio">
-      Reach me at <a href="mailto:jason@prestons.me">jason@prestons.me</a>. Full bio over at <a href="https://www.alsop-louie.com/team/jason-preston/">Alsop Louie</a>.
+      Reach me at <a href="mailto:jason@jrpreston.com">jason@jrpreston.com</a>. Professional bio over at <a href="https://www.alsop-louie.com/team/jason-preston/">Alsop Louie</a>.
     </div>
   </section>
 </BaseLayout>
 
 <style>
+  .home-toggle {
+    position: fixed;
+    top: 1.5rem;
+    right: 2rem;
+    z-index: 100;
+  }
   .home {
     max-width: 820px;
     margin: 4rem auto 6rem;
@@ -58,7 +68,11 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
     /* Use the text-grade Fraunces axes (lower opsz, SOFT 0) on the home name
        to keep the J neutral. Other headlines still use the display-grade
        opsz 144, SOFT 30 settings. */
-    font-variation-settings: "opsz" 60, "SOFT" 0, "WONK" 0;
+    /* Body-grade Fraunces (opsz 14) at display size. Disables ALL display
+       character flourishes including the J tail. Also turn off ss01 which
+       may swap in alternate letterforms. */
+    font-variation-settings: "opsz" 14, "SOFT" 0, "WONK" 0;
+    font-feature-settings: "ss01" 0;
     font-weight: 400;
     letter-spacing: -.025em;
     line-height: .95;

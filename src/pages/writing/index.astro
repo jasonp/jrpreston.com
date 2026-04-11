@@ -16,7 +16,7 @@ const recent = (await getCollection('writing', ({ data }) => !data.draft && !dat
     <header class="section-header">
       <div class="eyebrow">Essays &amp; longer pieces</div>
       <h1>Writing</h1>
-      <p class="dek">Whatever's worth a longer turn. No schedule. <a href="/writing/rss.xml">RSS</a>. For older posts from the WordPress years, see the <a href="/archive/">archive</a>.</p>
+      <p class="dek">Whatever's worth a longer turn. No schedule. <a href="/writing/rss.xml">RSS</a>. For older posts from the WordPress years, see <a href="/projects/">projects</a>.</p>
     </header>
 
     <WritingGrid posts={recent} />
