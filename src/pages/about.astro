@@ -1,89 +1,22 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-// NOTE: The threads interaction below uses an inline <script> for M2.
-// In M4 we'll polish the About page and migrate this to a proper Astro
-// island once a UI framework integration (Svelte/React/Solid) is added.
-// Behavior is identical; the architectural distinction matters at scale.
-
-const threads = [
-  { id: 'writing',   label: 'Writing' },
-  { id: 'investing', label: 'Investing' },
-  { id: 'tinkering', label: 'Tinkering' },
-  { id: 'stage',     label: 'Stage' },
-  { id: 'family',    label: 'Family' },
-  { id: 'games',     label: 'Games' },
-  { id: 'magic',     label: 'Magic' },
-];
+import ThreadsAbout from '../components/ThreadsAbout.svelte';
 ---
 
 <BaseLayout
   title="About — Jason Preston"
-  description="A curious life. Writer, investor, magician, tennis hack."
+  description="A curious life. Writer, investor, twiddler of thumbs, magician, and tennis hack."
 >
   <section class="about">
     <header class="about-header">
       <div class="eyebrow">About</div>
       <h1>A curious life.</h1>
-  <p class="tagline">Writer, investor, twiddler of thumbs, magician, and tennis hack.</p>
+      <p class="tagline">Writer, investor, twiddler of thumbs, magician, and tennis hack.</p>
     </header>
 
-    <div class="threads-bar" aria-label="Filter narrative by thread">
-      <span class="label">Follow a thread</span>
-      <div class="thread-tags">
-        {threads.map((t) => (
-          <button class="thread" data-thread={t.id} type="button">{t.label}</button>
-        ))}
-      </div>
-    </div>
-
-    <div class="about-body" id="about-body">
-      <p data-threads="writing games">I grew up in Bellevue with a Microsoft-engineer father and a pile of beige boxes, and the two things I remember most clearly from elementary school are coding a text adventure in QBasic and starting a very small "software company" with two friends that sold exactly zero copies of anything. The fact that we tried is what mattered. The fact that we kept writing things down is what still matters.</p>
-
-      <p data-threads="stage">I spent my high school years doing twelve shows a year in the theater program, which taught me everything I know about reading a room. I thought I was going to be an actor. In college, at Occidental, I kept theater at arm's length so I wouldn't get swallowed by it, and studied Diplomacy and World Affairs instead. It is the least directly useful degree imaginable, and I would pick it again.</p>
-
-      <p data-threads="writing">I have kept a blog of some kind since 2001. I've used LiveJournal, WordPress, Substack, custom static HTML, and every format in between. The through line isn't the tool. It's that I write to find out what I think, and I've never stopped needing to do that.</p>
-
-      <p data-threads="investing stage">I came to venture sideways. After a decade running technology events &mdash; the Blog Business Summit, early Twitter conferences, then co-founding Dent in 2012 &mdash; founders started asking me for help with strategy and culture. That turned into a consulting practice, then into Capture Culture, then into joining Alsop Louie Partners as a Venture Partner in 2019. I became a Partner in 2022 and have spent the last seven years learning the craft of venture capital from people who have been at it for forty.</p>
-
-      <p data-threads="investing">Most of what I know about investing is what I learned from my first bad board meeting, and the next one, and the next one. The job is mostly the difference between being stubborn and being wrong, and that is mostly an exercise in paying attention before the meeting that the meeting is going to be about.</p>
-
-      <p data-threads="family stage">In 2015 my wife M&oacute;nica won a Nieman Fellowship at Harvard, and our family spent a year in Cambridge while she did her work. I was a Nieman Associate, which meant I could audit any class at Harvard or MIT, and I did so with wild abandon: Digital Transformation at HBS, Planetary Geology, Medical Device Innovation at MIT, Public Narrative at HKS. That year reset everything I thought I knew about learning.</p>
-
-      <p data-threads="magic games">I am an amateur magician working toward the Magic Castle, an avid club tennis player, and a recovering competitive Counter-Strike content creator (WatchSpade, 2012&ndash;2014, one million views, do not ask). I play the drums, badly, and the guitar, worse. I read 20&ndash;50 books a year, mostly Dan Simmons and mystery fiction right now. I've officiated four weddings.</p>
-
-      <p data-threads="family investing">In December 2012, my newborn son Julian was diagnosed with hydrocephalus. I joined the board of the Hydrocephalus Association the next year, chaired it from 2022&ndash;2024, and helped launch the first patient-powered registry for the condition. During my board tenure HA invested $15M in targeted research grants that have led to $75M in follow-on funding from the NIH and other major funders. That work is a lot of why I'm still at the venture table: I know what it looks like when research funding changes a life.</p>
-
-      <p>This is the M2 placeholder version. The full long-form narrative, with all the threads woven and the interactive element polished, lands in M4.</p>
-    </div>
+    <ThreadsAbout client:load />
   </section>
 </BaseLayout>
-
-<script is:inline>
-  (function () {
-    const tags = document.querySelectorAll('.thread');
-    const paras = document.querySelectorAll('#about-body p[data-threads]');
-    let active = null;
-
-    tags.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const th = btn.dataset.thread;
-        if (active === th) {
-          active = null;
-          tags.forEach((b) => b.classList.remove('active'));
-          paras.forEach((p) => p.classList.remove('glow'));
-          return;
-        }
-        active = th;
-        tags.forEach((b) => b.classList.toggle('active', b.dataset.thread === th));
-        paras.forEach((p) => {
-          const t = (p.dataset.threads || '').split(' ');
-          p.classList.toggle('glow', t.includes(th));
-        });
-      });
-    });
-  })();
-</script>
 
 <style>
   .about {
@@ -117,69 +50,7 @@ const threads = [
     margin: 0;
   }
 
-  .threads-bar {
-    max-width: var(--prose);
-    margin: 0 auto 3rem;
-    padding: 1.5rem;
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
-    text-align: center;
-  }
-  .threads-bar .label {
-    display: block;
-    font-size: .72rem;
-    text-transform: uppercase;
-    letter-spacing: .14em;
-    color: var(--muted);
-    margin-bottom: 1rem;
-    font-weight: 500;
-  }
-  .thread-tags {
-    display: flex;
-    gap: .5rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .thread {
-    background: transparent;
-    border: 1px solid var(--rule);
-    color: var(--ink);
-    padding: .4rem .9rem;
-    border-radius: 999px;
-    font-family: inherit;
-    font-size: .85rem;
-    cursor: pointer;
-    transition: all .15s;
-    font-variation-settings: "opsz" 14, "SOFT" 30, "WONK" 0;
-  }
-  .thread:hover { border-color: var(--accent); color: var(--accent); }
-  .thread.active {
-    background: var(--accent);
-    color: var(--paper);
-    border-color: var(--accent);
-  }
-
-  .about-body {
-    max-width: var(--prose);
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
-  .about-body p {
-    margin-bottom: 1.5rem;
-    font-size: 1.08rem;
-    line-height: 1.65;
-    padding-left: 1rem;
-    border-left: 2px solid transparent;
-    transition: border-color .25s, background .25s, padding-left .25s;
-  }
-  .about-body p.glow {
-    border-left-color: var(--accent);
-    background: var(--accent-soft);
-    padding-left: 1.2rem;
-  }
-
   @media (max-width: 600px) {
     .about { padding: 2rem 1.25rem 3rem; }
-    .threads-bar { padding: 1rem; }
   }
 </style>
