@@ -30,7 +30,8 @@ The single source of truth for visual decisions on jrpreston.com. Every componen
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   ```
-- **WONK axis is OFF (`WONK 0`) everywhere.** The wonky J in "Jason" is forbidden. SOFT axis stays on at 30 for body, 30 for display, 60 for italic.
+- **WONK axis is OFF (`WONK 0`) everywhere.** SOFT axis stays on at 30 for body, 30 for display, 60 for italic.
+- **Home name exception.** The home page "Jason Preston" headline uses **Literata** (opsz 72, weight 400) instead of Fraunces. Fraunces' J has an inherent flourish at all optical sizes that doesn't suit the name as a wordmark. Literata is a bookish Google Fonts serif with a perfectly neutral J. Loaded via the same CSS2 link, only weight 400.
 - **Mono.** JetBrains Mono — used only for dates, version numbers, tabular metadata, code blocks, and the JetBrains pixel grid feel in the TOC numbering. Never for body.
 
 ### Type scale
@@ -172,7 +173,7 @@ The single source of truth for visual decisions on jrpreston.com. Every componen
 
 - Single column, narrow
 - Hero name + italic tagline
-- **Threads bar** above the narrative: theme buttons (`Writing · Investing · Stage · Family · Games · Magic · Community`) styled as pill tags
+- **Threads bar** above the narrative: theme buttons (`Writing · Investing · Tinkering · Stage · Family · Games · Magic`) styled as pill tags
 - Clicking a thread:
   - Sets that thread `active` (filled with terracotta, paper text)
   - Adds `.glow` class to all paragraphs whose `data-threads` includes that thread
@@ -216,6 +217,10 @@ The single source of truth for visual decisions on jrpreston.com. Every componen
 | 2026-04-09 | Three-column essay grid (TOC + prose + footnote margin) | TML pattern. User requested margin footnotes and a TOC. |
 | 2026-04-09 | First Astro island = threads on /about | User chose threads over era scrubber. |
 | 2026-04-09 | Photography first-class with three figure widths | User requested wide/full-bleed media support. Longs Peak photo confirmed for home hero. |
+| 2026-04-10 | Home name uses Literata, not Fraunces | Fraunces' J has an inherent flourish the user dislikes. Literata gives a neutral, bookish J. Only loads for home name; rest of site stays Fraunces. |
+| 2026-04-10 | Rename Archive → Projects | User prefers "Projects" as a broader container for older/inactive work. |
+| 2026-04-10 | Writing page uses card grid, not dated list | Grid implies "a collection" not "a schedule." Dates are de-emphasized to year only. |
+| 2026-04-10 | Added Tinkering thread to About | User added alongside Writing, Investing, Stage, Family, Games, Magic. |
 | 2026-04-09 | Light/dark toggle ships on the live site | User confirmed in v2 review. |
 
 ## Snapshots
