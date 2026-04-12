@@ -1,0 +1,144 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('writing', ({ data }) => data.archive === true)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// Group by year
+const byYear = new Map();
+for (const post of posts) {
+  const year = post.data.pubDate.getFullYear();
+  if (!byYear.has(year)) byYear.set(year, []);
+  byYear.get(year)!.push(post);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+
+const dateFmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+---
+
+<BaseLayout
+  title="Writing Archive (2005–2011) — Jason Preston"
+  description="Blog posts from the WordPress years. Some about technology, some about events, some about whatever I was thinking about that morning."
+>
+  <section class="section">
+    <header class="section-header">
+      <div class="eyebrow">Projects · Writing</div>
+      <h1>Archive</h1>
+      <p class="dek">{posts.length} posts from the WordPress years, 2005–2011. Unedited, for historical completeness. <a href="/projects/">Back to projects</a>.</p>
+    </header>
+
+    {years.map((year) => {
+      const yearPosts = byYear.get(year)!;
+      return (
+        <div class="year-group">
+          <h2 class="year-label">{year} <span class="count">{yearPosts.length}</span></h2>
+          <ol class="post-list">
+            {yearPosts.map((post) => {
+              const slug = post.id.replace(/\.mdx?$/, '');
+              return (
+                <li class="post-item">
+                  <time datetime={post.data.pubDate.toISOString()}>{dateFmt(post.data.pubDate)}</time>
+                  <a href={`/writing/${slug}/`}>{post.data.title}</a>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      );
+    })}
+  </section>
+</BaseLayout>
+
+<style>
+  .section {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 4rem 2rem 4rem;
+  }
+  .section-header { text-align: center; margin-bottom: 4rem; }
+  .eyebrow {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  h1 {
+    font-size: clamp(2.6rem, 6vw, 4rem);
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+    font-weight: 400;
+    letter-spacing: -.03em;
+    line-height: 1;
+    margin: 0 0 1rem;
+  }
+  .dek {
+    color: var(--muted);
+    font-size: 1.05rem;
+    font-variation-settings: "opsz" 24, "SOFT" 60, "WONK" 0;
+    font-style: italic;
+    max-width: 56ch;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+  .dek a { color: var(--muted); border-bottom-color: var(--rule); }
+  .dek a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .year-group {
+    max-width: 720px;
+    margin: 0 auto 3rem;
+  }
+  .year-label {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    color: var(--ink);
+    font-weight: 500;
+    font-feature-settings: "tnum";
+    padding-bottom: .75rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1rem;
+  }
+  .year-label .count {
+    font-size: .72rem;
+    color: var(--muted);
+    font-weight: 400;
+    margin-left: .5rem;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .post-item {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: .45rem 0;
+  }
+  .post-item time {
+    flex-shrink: 0;
+    width: 4.5rem;
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    color: var(--faint);
+    text-transform: uppercase;
+    font-feature-settings: "tnum";
+  }
+  .post-item a {
+    color: var(--ink);
+    border: none;
+    font-size: .98rem;
+    transition: color .15s;
+  }
+  .post-item a:hover { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .section { padding: 2rem 1.25rem 3rem; }
+    .post-item { flex-direction: column; gap: .2rem; }
+    .post-item time { width: auto; }
+  }
+</style>
