@@ -38,8 +38,10 @@ const dateFmt = (d: Date) =>
           <ol class="post-list">
             {yearPosts.map((post) => {
               const slug = post.id.replace(/\.mdx?$/, '');
+              const words = post.body ? post.body.trim().split(/\s+/).length : 0;
+              const isShort = words < 100;
               return (
-                <li class="post-item">
+                <li class:list={['post-item', { short: isShort }]}>
                   <time datetime={post.data.pubDate.toISOString()}>{dateFmt(post.data.pubDate)}</time>
                   <a href={`/writing/${slug}/`}>{post.data.title}</a>
                 </li>
@@ -135,6 +137,10 @@ const dateFmt = (d: Date) =>
     transition: color .15s;
   }
   .post-item a:hover { color: var(--accent); }
+
+  /* Short posts (<100 words) — link posts, not full essays. Dimmed. */
+  .post-item.short a { color: var(--muted); }
+  .post-item.short a:hover { color: var(--accent); }
 
   @media (max-width: 600px) {
     .section { padding: 2rem 1.25rem 3rem; }
