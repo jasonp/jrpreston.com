@@ -23,3 +23,7 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .gstack/
+
+# Reference material — local working files (WP SQL dump with PII,
+# bio drafts, etc.). Not part of the deployed site. Never push.
+_reference/

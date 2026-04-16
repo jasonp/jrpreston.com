@@ -11,7 +11,7 @@
  *   node scripts/ingest-daily.mjs --dry-run # show what would happen, don't write
  */
 
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 'node:fs';
 import { join, basename } from 'node:path';
 
 const DRAFTS_DIR = '_reference/daily-drafts';
@@ -19,6 +19,15 @@ const OUTPUT_DIR = 'src/content/daily';
 const args = process.argv.slice(2);
 const ALL = args.includes('--all');
 const DRY = args.includes('--dry-run');
+
+// Create the drafts folder if missing (fresh clones won't have it since
+// _reference/ is gitignored).
+if (!existsSync(DRAFTS_DIR)) {
+  mkdirSync(DRAFTS_DIR, { recursive: true });
+  console.log(`Created ${DRAFTS_DIR}/`);
+  console.log('No draft files to ingest yet.\n');
+  process.exit(0);
+}
 
 const draftFiles = readdirSync(DRAFTS_DIR)
   .filter(f => f.endsWith('.md'))
