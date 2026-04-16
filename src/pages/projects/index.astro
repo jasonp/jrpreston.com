@@ -2,37 +2,54 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-// Pull archived posts from any collection that supports the archive flag.
-// For now, only writing has it. Daily can opt in later by adding the field.
 const archivedWriting = (await getCollection('writing', ({ data }) => data.archive === true)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-interface ArchiveSection {
+interface ProjectSection {
   id: string;
   title: string;
   era: string;
-  count: number;
   description: string;
-  status: 'live' | 'pending';
+  /** Meta strip at bottom — count, pill, etc. */
+  meta?: string;
+  /** Link destination (internal path or external URL) */
   href: string | null;
+  /** Link label (e.g. "Enter the archive →") */
+  linkText?: string;
+  /** External link opens in new tab */
+  external?: boolean;
+  /** Shown as a pill instead of a link */
+  statusPill?: string;
+  /** Supplementary note below meta */
   note?: string;
 }
 
-const sections: ArchiveSection[] = [
+const sections: ProjectSection[] = [
   {
     id: 'writing-wp',
     title: 'WordPress Blog',
     era: '2005 — 2011',
-    count: archivedWriting.length,
     description:
       "Long-form posts from the WordPress years. Some about technology, some about events, some about whatever I was thinking about that morning. A few are still good. A few are very of their time.",
-    status: archivedWriting.length > 0 ? 'live' : 'pending',
+    meta: archivedWriting.length > 0 ? `${archivedWriting.length} posts` : undefined,
     href: archivedWriting.length > 0 ? '/projects/writing/' : null,
+    linkText: archivedWriting.length > 0 ? 'Enter the archive →' : undefined,
+    statusPill: archivedWriting.length === 0 ? 'In progress' : undefined,
     note:
       archivedWriting.length > 0
         ? undefined
         : "Migration in progress. Pulling from a 2011 WordPress SQL dump (~1,800 posts across two blogs) and revising to a curated set.",
+  },
+  {
+    id: 'ladderverse',
+    title: 'Ladderverse',
+    era: 'Live · Since 2024',
+    description:
+      "A daily word-ladder puzzle. Start with one word, change one letter at a time to reach the next, score against the optimal path. One puzzle every day, simple to learn, hard to master.",
+    href: 'https://ladderverse.com',
+    linkText: 'Play at ladderverse.com →',
+    external: true,
   },
 ];
 ---
@@ -46,27 +63,36 @@ const sections: ArchiveSection[] = [
       <div class="eyebrow">I can't help myself. I make things.</div>
       <h1>Projects</h1>
       <p class="dek">"Do you like it? You don't like it? OK... I'll put it in the garage."</p>
-      <p class="dek">- Eddie Izzard.</p>
+      <p class="dek attribution">— Eddie Izzard</p>
     </header>
 
     <div class="archive-grid">
       {sections.map((s) => (
-        <article class={`archive-card ${s.status}`}>
+        <article class="project-card">
           <header>
             <div class="era">{s.era}</div>
             <h2>{s.title}</h2>
           </header>
           <p class="desc">{s.description}</p>
           <div class="meta">
-            {s.status === 'live' ? (
+            {s.statusPill ? (
               <>
-                <span class="count">{s.count} {s.count === 1 ? 'post' : 'posts'}</span>
-                <a href={s.href!} class="enter">Enter the archive →</a>
+                <span class="status-pill">{s.statusPill}</span>
+                {s.note && <p class="note">{s.note}</p>}
               </>
             ) : (
               <>
-                <span class="status-pill">In progress</span>
-                {s.note && <p class="note">{s.note}</p>}
+                {s.meta && <span class="count">{s.meta}</span>}
+                {s.href && (
+                  <a
+                    href={s.href}
+                    class="enter"
+                    target={s.external ? '_blank' : undefined}
+                    rel={s.external ? 'noopener noreferrer' : undefined}
+                  >
+                    {s.linkText ?? 'Visit →'}
+                  </a>
+                )}
               </>
             )}
           </div>
@@ -111,6 +137,11 @@ const sections: ArchiveSection[] = [
     margin: 0 auto;
     line-height: 1.5;
   }
+  .dek.attribution {
+    font-size: .9rem;
+    color: var(--faint);
+    margin-top: .25rem;
+  }
 
   .archive-grid {
     display: grid;
@@ -120,16 +151,15 @@ const sections: ArchiveSection[] = [
     margin: 0 auto;
   }
 
-  .archive-card {
+  .project-card {
     border: 1px solid var(--rule);
     padding: 2rem 2rem 2rem;
     background: transparent;
     transition: border-color .15s, background .15s;
   }
-  .archive-card:hover { border-color: var(--accent); }
-  .archive-card.pending { background: var(--surface); }
+  .project-card:hover { border-color: var(--accent); }
 
-  .archive-card .era {
+  .project-card .era {
     font-family: var(--font-mono);
     font-size: .7rem;
     color: var(--muted);
@@ -138,7 +168,7 @@ const sections: ArchiveSection[] = [
     font-feature-settings: "tnum";
     margin-bottom: .35rem;
   }
-  .archive-card h2 {
+  .project-card h2 {
     font-size: 2rem;
     font-variation-settings: "opsz" 80, "SOFT" 30, "WONK" 0;
     font-weight: 400;
@@ -146,29 +176,29 @@ const sections: ArchiveSection[] = [
     line-height: 1;
     margin: 0 0 1rem;
   }
-  .archive-card .desc {
+  .project-card .desc {
     color: var(--muted);
     font-size: .98rem;
     line-height: 1.55;
     margin: 0 0 1.5rem;
   }
-  .archive-card .meta {
+  .project-card .meta {
     padding-top: 1.25rem;
     border-top: 1px solid var(--rule);
     font-size: .85rem;
   }
-  .archive-card .count {
+  .project-card .count {
     color: var(--ink);
     font-feature-settings: "tnum";
     margin-right: 1.5rem;
   }
-  .archive-card .enter {
+  .project-card .enter {
     color: var(--accent);
     font-weight: 500;
     border: none;
   }
-  .archive-card .enter:hover { color: var(--ink); }
-  .archive-card .status-pill {
+  .project-card .enter:hover { color: var(--ink); }
+  .project-card .status-pill {
     display: inline-block;
     font-size: .68rem;
     text-transform: uppercase;
@@ -180,7 +210,7 @@ const sections: ArchiveSection[] = [
     font-weight: 500;
     font-feature-settings: "tnum";
   }
-  .archive-card .note {
+  .project-card .note {
     margin: .85rem 0 0;
     font-size: .82rem;
     color: var(--muted);
@@ -189,6 +219,6 @@ const sections: ArchiveSection[] = [
 
   @media (max-width: 600px) {
     .section { padding: 2rem 1.25rem 3rem; }
-    .archive-card { padding: 1.5rem; }
+    .project-card { padding: 1.5rem; }
   }
 </style>
