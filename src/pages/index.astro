@@ -1,13 +1,6 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
-
-const dailyPosts = (await getCollection('daily', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const latest = dailyPosts[0];
-
-const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
 ---
 
 <BaseLayout title="Jason Preston" noChrome>
@@ -24,9 +17,9 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
       <figcaption>Crepuscular rays · Longs Peak · Rocky Mountain N.P.</figcaption>
     </figure>
     <nav class="home-nav anim a4">
-      <a href="/daily/" class="nav-link">
-        <span class="nav-label">Daily</span>
-        <span class="nav-meta">An AI experiment</span>
+      <a href="https://jasonp.substack.com/" class="nav-link">
+        <span class="nav-label">Substack</span>
+        <span class="nav-meta">Thinking in Public</span>
       </a>
       <a href="/writing/" class="nav-link">
         <span class="nav-label">Writing</span>
@@ -45,14 +38,6 @@ const dateFmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day:
         <span class="nav-meta">On Flickr</span>
       </a>
     </nav>
-
-    {latest && (
-      <div class="latest anim a5">
-        <span class="latest-arrow">→</span>
-        <a href={`/daily/${latest.id.replace(/\.mdx?$/, '')}/`}>{latest.data.title}</a>
-        <span class="latest-date">{dateFmt(latest.data.pubDate)}</span>
-      </div>
-    )}
 
     <footer class="home-foot anim a6">
       <a href="mailto:jason@jrpreston.com">jason@jrpreston.com</a>

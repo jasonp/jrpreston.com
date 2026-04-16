@@ -1,20 +1,30 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ThreadsAbout from '../components/ThreadsAbout.svelte';
+import InteractiveBio from '../components/InteractiveBio.svelte';
 ---
 
 <BaseLayout
   title="About — Jason Preston"
-  description="A curious life. Writer, investor, twiddler of thumbs, magician, and tennis hack."
+  description="Founder, writer, investor, twiddler of thumbs. A curious life."
 >
   <section class="about">
     <header class="about-header">
       <div class="eyebrow">About</div>
       <h1>A curious life.</h1>
-      <p class="tagline">Writer, investor, twiddler of thumbs, magician, and tennis hack.</p>
+      <p class="tagline">Click a category to open it.</p>
     </header>
 
-    <ThreadsAbout client:load />
+    <InteractiveBio client:load />
+
+    <div class="classic-bio">
+      <h2>The professional version</h2>
+
+      <p>Jason spent the first 14 years of his career in technology events. He started in 2005 working on the Blog Business Summit, then worked on early Facebook and Twitter conferences. He worked alongside the early team at Twitter to connect Silicon Valley and Hollywood, verifying Twitter accounts and launching a number of household names on the platform, including William Shatner and Pee-Wee Herman. In 2012, Jason co-founded the Dent Conference, which is dedicated to helping people "put a dent in the universe." The conference has been a study in entrepreneurship and success, and a source of inspiration and fuel for many notable leaders of our time, including Lyft CEO David Risher, astronaut and Voyager Space CEO Tim Kopra, and Pixar co-founder Alvy Ray Smith.</p>
+
+      <p>As a result of Jason's work at Dent, attendees approached him with questions about leadership, company culture, and paths to success, which led him to create a consulting business to help companies like Microsoft and nonprofits like Malaria No More with strategy and culture. In 2015, he joined the board of the national medical nonprofit Hydrocephalus Association, becoming chair of the board in 2022.</p>
+
+      <p>Jason joined Alsop Louie Partners as a Venture Partner in 2019 and became a Partner in 2022. He has spent the last five years learning the craft of venture capital from some of the best VCs in the business. Jason lives in Seattle, WA, with his wife and two children.</p>
+    </div>
   </section>
 </BaseLayout>
 
@@ -44,10 +54,33 @@ import ThreadsAbout from '../components/ThreadsAbout.svelte';
   }
   .tagline {
     color: var(--muted);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-variation-settings: "opsz" 24, "SOFT" 60, "WONK" 0;
     font-style: italic;
     margin: 0;
+  }
+
+  .classic-bio {
+    max-width: 640px;
+    margin: 5rem auto 0;
+    padding-top: 3rem;
+    border-top: 1px solid var(--rule);
+  }
+  .classic-bio h2 {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: var(--muted);
+    margin: 0 0 1.5rem;
+    font-weight: 500;
+    text-align: center;
+  }
+  .classic-bio p {
+    font-size: 1.02rem;
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+    color: var(--ink);
+    font-variation-settings: "opsz" 14, "SOFT" 30, "WONK" 0;
   }
 
   @media (max-width: 600px) {
